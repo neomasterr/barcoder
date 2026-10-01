@@ -2,10 +2,11 @@
 
 namespace Neomasterr\Barcoder;
 
+use InvalidArgumentException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class BarcodeReader
+class Reader
 {
     private string $cliPath;
     private array $defaultTypes = [
@@ -18,7 +19,7 @@ class BarcodeReader
     public function __construct(string $cliPath)
     {
         if (!file_exists($cliPath)) {
-            throw new \InvalidArgumentException("Исполняемый файл Barcode Reader CLI не найден: {$cliPath}");
+            throw new InvalidArgumentException("Исполняемый файл Barcode Reader CLI не найден: {$cliPath}");
         }
 
         $this->cliPath = $cliPath;
@@ -26,6 +27,10 @@ class BarcodeReader
 
     public function readRaw(string $imagePath, array $types = [], array $additionalOptions = []): string
     {
+        if (!file_exists($imagePath)) {
+            throw new InvalidArgumentException("Image not found: {$imagePath}");
+        }
+
         $command = [$this->cliPath];
 
         if (empty($types)) {
@@ -42,7 +47,7 @@ class BarcodeReader
 
         $command[] = $imagePath;
 
-        $process = new Process($command);
+        $process = $this->createProcess($command);
         $process->setTimeout(60);
         $process->run();
 
@@ -77,5 +82,10 @@ class BarcodeReader
         }
 
         return $extractedBarcodes;
+    }
+
+    protected function createProcess(array $command): Process
+    {
+        return new Process($command);
     }
 }
