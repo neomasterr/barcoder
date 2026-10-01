@@ -1,0 +1,20 @@
+{
+    "name": "neomasterr/barcoder",
+    "description": "Barcode utils",
+    "type": "library",
+    "require": {
+        "php": "^8.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Neomasterr\\Barcoder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "neomasterr",
+            "email": "neomasterr@mail.ru"
+        }
+    ]
+}
