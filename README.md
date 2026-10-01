@@ -28,7 +28,7 @@ To use this wrapper, you **must independently obtain a valid license and downloa
 Install the package via [Composer](https://getcomposer.org):
 
 ```bash
-composer require your-username/inlite-barcode-reader
+composer require neomasterr/barcoder
 ```
 
 ## 🛠️ Usage
