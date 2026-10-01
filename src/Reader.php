@@ -1,34 +1,46 @@
 <?php
 
-namespace YourNamespace\InliteBarcode;
+namespace Neomasterr\Barcoder;
 
-use InvalidArgumentException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class Reader
+class BarcodeReader
 {
     private string $cliPath;
+    private array $defaultTypes = [
+        'i25', 'code39', 'code128', 'codabar', 'upca',
+        'ean8', 'code93', 'upce', 'ean13', 'ucc128',
+        'patch', 'datamatrix', 'pdf417', '4state',
+        'imb', 'bpo', 'aust', 'qr', 'sing', 'drvlic',
+    ];
 
     public function __construct(string $cliPath)
     {
         if (!file_exists($cliPath)) {
-            throw new InvalidArgumentException("Исполняемый файл Barcode Reader CLI не найден по пути: {$cliPath}");
+            throw new \InvalidArgumentException("Исполняемый файл Barcode Reader CLI не найден: {$cliPath}");
         }
-        
+
         $this->cliPath = $cliPath;
     }
 
-    public function read(string $imagePath, array $additionalOptions = []): string
+    public function readRaw(string $imagePath, array $types = [], array $additionalOptions = []): string
     {
-        if (!file_exists($imagePath)) {
-            throw new InvalidArgumentException("Файл изображения не найден: {$imagePath}");
+        $command = [$this->cliPath];
+
+        if (empty($types)) {
+            $types = $this->defaultTypes;
         }
 
-        $command = array_merge(
-            [$this->cliPath, $imagePath],
-            $additionalOptions
-        );
+        $typesString = implode(',', $types);
+        $command[] = "--type={$typesString}";
+        $command[] = "--format=json";
+
+        foreach ($additionalOptions as $option) {
+            $command[] = $option;
+        }
+
+        $command[] = $imagePath;
 
         $process = new Process($command);
         $process->setTimeout(60);
@@ -39,5 +51,31 @@ class Reader
         }
 
         return trim($process->getOutput());
+    }
+
+    public function readAsArray(string $imagePath, array $types = []): array
+    {
+        $rawJson = $this->readRaw($imagePath, $types);
+        $data = json_decode($rawJson, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException("Ошибка парсинга JSON: " . json_last_error_msg());
+        }
+
+        $extractedBarcodes = [];
+
+        foreach ($data['sessions'] ?? [] as $session) {
+            foreach ($session['barcodes'] ?? [] as $barcode) {
+                $extractedBarcodes[] = [
+                    'text'   => $barcode['text'] ?? '',
+                    'type'   => $barcode['type'] ?? '',
+                    'length' => $barcode['length'] ?? 0,
+                    'data'   => $barcode['data'] ?? '', // Base64
+                    'page'   => $barcode['page']['number'] ?? 1,
+                ];
+            }
+        }
+
+        return $extractedBarcodes;
     }
 }
