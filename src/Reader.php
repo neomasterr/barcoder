@@ -65,7 +65,7 @@ class Reader
         $data = json_decode($rawJson, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new RuntimeException("Ошибка парсинга JSON: " . json_last_error_msg());
+            throw new RuntimeException('Ошибка парсинга JSON: '.json_last_error_msg());
         }
 
         $extractedBarcodes = [];

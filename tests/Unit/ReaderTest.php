@@ -138,7 +138,7 @@ class ReaderTest extends TestCase
         $this->assertEquals('351495961898000', $result[1]['text']);
     }
 
-    private function getCliReaderPath()
+    private function getCliReaderPath(): string
     {
         return match(php_uname('s')) {
             'Linux' => __DIR__.'/../../bin/BarcodeReaderCLI',
