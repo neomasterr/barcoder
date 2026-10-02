@@ -97,4 +97,22 @@ class ReaderTest extends TestCase
         $this->assertEquals('patch', $result[1]['type']);
         $this->assertEquals('1', $result[1]['text']);
     }
+
+    public function testCanReadClearBarcode(): void
+    {
+        $reader = new Reader(__DIR__.'/../../bin/BarcodeReaderCLI.exe');
+        $result = $reader->readAsArray(__DIR__.'/../images/5901234123457.jpg');
+
+        $this->assertEquals('ean13', $result[0]['type']);
+        $this->assertEquals('5901234123457', $result[0]['text']);
+    }
+
+    public function testCanReadPhotoBarcode(): void
+    {
+        $reader = new Reader(__DIR__.'/../../bin/BarcodeReaderCLI.exe');
+        $result = $reader->readAsArray(__DIR__.'/../images/9100000154084.jpg');
+
+        $this->assertEquals('ean13', $result[0]['type']);
+        $this->assertEquals('9100000154084', $result[0]['text']);
+    }
 }
