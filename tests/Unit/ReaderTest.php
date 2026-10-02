@@ -106,4 +106,21 @@ class ReaderTest extends TestCase
         $this->assertEquals('ean13', $result[0]['type']);
         $this->assertEquals('9100000154084', $result[0]['text']);
     }
+
+    public function testCanReadQr(): void
+    {
+        $reader = new Reader(__DIR__.'/../../bin/BarcodeReaderCLI.exe');
+        $result = $reader->readAsArray(__DIR__.'/../images/qr.jpg');
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('qr', $result[0]['type']);
+        $this->assertEquals('*C+LjyYQp', $result[0]['text']);
+
+        $this->assertEquals('qr', $result[1]['type']);
+        $this->assertEquals('WB-GI-223272667', $result[1]['text']);
+
+        $this->assertEquals('qr', $result[2]['type']);
+        $this->assertEquals('$WBMP:1:250001634:35262500', $result[2]['text']);
+    }
 }
