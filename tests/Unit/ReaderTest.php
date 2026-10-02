@@ -91,7 +91,7 @@ class ReaderTest extends TestCase
 
     public function testCanReadClearBarcode(): void
     {
-        $reader = new Reader(__DIR__.'/../../bin/BarcodeReaderCLI.exe');
+        $reader = new Reader($this->getCliReaderPath());
         $result = $reader->readAsArray(__DIR__.'/../images/5901234123457.jpg');
 
         $this->assertEquals('ean13', $result[0]['type']);
@@ -100,17 +100,17 @@ class ReaderTest extends TestCase
 
     public function testCanReadPhotoBarcode(): void
     {
-        $reader = new Reader(__DIR__.'/../../bin/BarcodeReaderCLI.exe');
+        $reader = new Reader($this->getCliReaderPath());
         $result = $reader->readAsArray(__DIR__.'/../images/9100000154084.jpg');
 
         $this->assertEquals('ean13', $result[0]['type']);
         $this->assertEquals('9100000154084', $result[0]['text']);
     }
 
-    public function testCanReadQr(): void
+    public function testCanReadWb(): void
     {
-        $reader = new Reader(__DIR__.'/../../bin/BarcodeReaderCLI.exe');
-        $result = $reader->readAsArray(__DIR__.'/../images/qr.jpg');
+        $reader = new Reader($this->getCliReaderPath());
+        $result = $reader->readAsArray(__DIR__.'/../images/wb.jpg');
 
         $this->assertCount(3, $result);
 
@@ -122,5 +122,27 @@ class ReaderTest extends TestCase
 
         $this->assertEquals('qr', $result[2]['type']);
         $this->assertEquals('$WBMP:1:250001634:35262500', $result[2]['text']);
+    }
+
+    public function testCanReadOzon(): void
+    {
+        $reader = new Reader($this->getCliReaderPath());
+        $result = $reader->readAsArray(__DIR__.'/../images/ozon.jpg');
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals('code128', $result[0]['type']);
+        $this->assertEquals('2100000024674', $result[0]['text']);
+
+        $this->assertEquals('qr', $result[1]['type']);
+        $this->assertEquals('351495961898000', $result[1]['text']);
+    }
+
+    private function getCliReaderPath()
+    {
+        return match(php_uname('s')) {
+            'Linux' => __DIR__.'/../../bin/BarcodeReaderCLI',
+            default => __DIR__.'/../../bin/BarcodeReaderCLI.exe',
+        };
     }
 }
