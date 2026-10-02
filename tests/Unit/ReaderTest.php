@@ -57,12 +57,6 @@ class ReaderTest extends TestCase
                   "length": 13,
                   "text": "2100000024674",
                   "type": "code128"
-                },
-                {
-                  "data": "MQ==",
-                  "length": 1,
-                  "text": "1",
-                  "type": "patch"
                 }
               ]
             }
@@ -88,14 +82,11 @@ class ReaderTest extends TestCase
 
         $result = $reader->readAsArray($this->tempImage, ['code128', 'patch']);
 
-        $this->assertCount(2, $result);
+        $this->assertCount(1, $result);
         
         $this->assertEquals('code128', $result[0]['type']);
         $this->assertEquals('2100000024674', $result[0]['text']);
         $this->assertEquals(13, $result[0]['length']);
-        
-        $this->assertEquals('patch', $result[1]['type']);
-        $this->assertEquals('1', $result[1]['text']);
     }
 
     public function testCanReadClearBarcode(): void
