@@ -20,7 +20,7 @@ class Reader
     public function __construct(string $cliPath)
     {
         if (!file_exists($cliPath)) {
-            throw new InvalidArgumentException("Исполняемый файл Barcode Reader CLI не найден: {$cliPath}");
+            throw new InvalidArgumentException("BarcodeReaderCLI not found at {$cliPath}, download https://docs.inliteresearch.com/barcode-reader-cli");
         }
 
         $this->cliPath = $cliPath;
@@ -65,7 +65,7 @@ class Reader
         $data = json_decode($rawJson, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new RuntimeException('Ошибка парсинга JSON: '.json_last_error_msg());
+            throw new RuntimeException('JSON error: '.json_last_error_msg());
         }
 
         $extractedBarcodes = [];
