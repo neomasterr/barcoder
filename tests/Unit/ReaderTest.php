@@ -140,9 +140,10 @@ class ReaderTest extends TestCase
 
     private function getCliReaderPath(): string
     {
-        return match(php_uname('s')) {
-            'Linux' => __DIR__.'/../../bin/BarcodeReaderCLI',
-            default => __DIR__.'/../../bin/BarcodeReaderCLI.exe',
-        };
+        if (php_uname('s')) {
+            return  __DIR__.'/../../bin/BarcodeReaderCLI';
+        }
+
+        return __DIR__.'/../../bin/BarcodeReaderCLI.exe';
     }
 }
