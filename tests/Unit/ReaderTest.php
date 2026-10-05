@@ -63,20 +63,20 @@ class ReaderTest extends TestCase
           ]
         }';
 
-        $mockProcess = $this->createStub(Process::class);
-        $mockProcess->method('isSuccessful')->willReturn(true);
-        $mockProcess->method('getOutput')->willReturn($mockJsonResponse);
+        $stubProcess = $this->createStub(Process::class);
+        $stubProcess->method('isSuccessful')->willReturn(true);
+        $stubProcess->method('getOutput')->willReturn($mockJsonResponse);
 
-        $reader = new class($this->tempCli, $mockProcess) extends Reader {
-            private Process $mockProcess;
+        $reader = new class($this->tempCli, $stubProcess) extends Reader {
+            private Process $stubProcess;
 
-            public function __construct($cli, $mockProcess) {
+            public function __construct($cli, $stubProcess) {
                 parent::__construct($cli);
-                $this->mockProcess = $mockProcess;
+                $this->stubProcess = $stubProcess;
             }
 
             protected function createProcess(array $command): Process {
-                return $this->mockProcess;
+                return $this->stubProcess;
             }
         };
 
