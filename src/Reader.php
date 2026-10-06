@@ -28,10 +28,6 @@ class Reader
 
     public function readRaw(string $imagePath, array $types = [], array $additionalOptions = []): string
     {
-        if (!file_exists($imagePath)) {
-            throw new InvalidArgumentException("Image not found: {$imagePath}");
-        }
-
         $command = [$this->cliPath];
 
         if (empty($types)) {
