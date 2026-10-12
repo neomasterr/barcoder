@@ -1,7 +1,9 @@
 # Inlite Barcode Reader CLI PHP Wrapper
 
-[![Latest Stable Version](https://shields.io)](https://packagist.org)
-[![License](https://shields.io)](LICENSE)
+[![Latest Stable Version](https://img.shields.io/packagist/dt/neomasterr/barcoder
+)](https://packagist.org/packages/neomasterr/barcoder)
+[![License](https://img.shields.io/github/license/neomasterr/barcoder
+)](LICENSE)
 
 A lightweight, secure, and developer-friendly PHP wrapper for the **Inlite Research Barcode Reader CLI** tool. It utilizes the `symfony/process` component to safely run barcode scanning processes without risking shell injections.
 
